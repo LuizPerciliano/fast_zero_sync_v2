@@ -587,13 +587,6 @@ git push
 
 
 
-
-
-
-
-
-
-[🐍 INICIO VOLTAR DAQUI ...🐍]
 # Aula 07 Refatorando a Estrutura do Projeto
 
 ## Criando Routers
@@ -700,25 +693,73 @@ git push
 
 
 
-
-[🐍 FIM VOLTAR DAQUI ...🐍]
-
+[🐍 INICIO VOLTAR DAQUI ...🐍]
 # Aula 08 Tornando o sistema de autenticação robusto
+
+## Testes para autenticação
+
+### Testando a alteração de um usuário não autorizado
+
+#### Criando modelos por demanda com factory-boy
+
+O factory-boy é uma biblioteca que nos permite criar objetos de modelo de teste de forma rápida e fácil. Com ele, podemos criar uma "fábrica" de usuários que produzirá novos objetos de usuário sempre que precisarmos. Isso nos permite criar múltiplos usuários de teste com facilidade, o que é perfeito para nosso cenário atual.
+
 ~~~shell
 poetry add --group dev factory-boy
 ~~~
+
+Executando os testes abaixo em diante, o meu deu erro em alguns, logo, os testes seguintes não foi possível avaliar, verificar* (No final copiei tudo e vi que um arquivo precisava estar diferente, porém preciso rever sobre o token, pois isso está quebrando meus testes)
+
+![alt text](image-3.png)
+
+
+### Testando o DELETE com o usuário errado
+
+
+### Testando a expiração do token
+
+
+### Testando o usuário não existente e senha incorreta
+
+
+#### Testando a exceção para um usuário inexistente
+
+
+#### Testando a exceção para uma senha incorreta
+
+
+
+## Implementando o refresh do token
+
+
 
 ~~~shell
 poetry add --group dev freezegun
 ~~~
 
 
-Atualizando o repositório.
+## Atualizando o repositório - Commit
+Caso seja um repositório de desenvolvimento compartilhado, verificar se no repositório remoto há algo novo e pedir para baixar.
 ~~~shell
-git add .
-git commit -m "Implementando o refresh do token e testes de autorização"
+git pull
 ~~~
 
+Verificar o status do repositório para ver as mudanças realizadas:
+~~~shell
+git status
+~~~
+
+Se tudo estiver ok, adicionar os arquivos, comitar e por fim enviar para o repositório remoto.
+~~~shell
+git add . 
+git commit -m "Implementando o refresh do token e testes de autorização." 
+git push 
+~~~
+
+
+
+
+[🐍 FIM VOLTAR DAQUI ...🐍]
 
 # Aula 09 Criando Rotas CRUD para Gerenciamento de Tarefas em FastAPI
 ## Criando a migração da nova tabela
