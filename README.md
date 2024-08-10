@@ -688,12 +688,6 @@ git push
 
 
 
-
-
-
-
-
-[🐍 INICIO VOLTAR DAQUI ...🐍]
 # Aula 08 Tornando o sistema de autenticação robusto
 
 ## Testes para autenticação
@@ -753,32 +747,150 @@ Se tudo estiver ok, adicionar os arquivos, comitar e por fim enviar para o repos
 ~~~shell
 git add . 
 git commit -m "Implementando o refresh do token e testes de autorização." 
-git push 
+git push --set-upstream origin main 
 ~~~
+
+
+[🐍 INICIO VOLTAR DAQUI ...🐍]
+# Aula 09 Criando Rotas CRUD para Gerenciamento de Tarefas em FastAPI
+## Criando a migração da nova tabela
+
+- Criação das rotas para as operações CRUD das tarefas
+- Fazer com só o usuário dono da tarefa possa acessar e modificar suas tarefas
+- Escrita e execução dos testes para cada operação das tarefas
+
+## Estrutura inicial do código
+Primeiro, criaremos um novo arquivo chamado todos.py no diretório de routers:
+~~~shell
+echo > fast_zero_v2\routers\todos.py
+~~~
+
+## Implementação da tabela no Banco de dados
+
+### Testando as novas implementações do banco de dados
+
+como verificar o coverage html?*
+
+
+## Schemas para Todos
+
+
+## Endpoint de criação
+
+### Testando o endpoint de criação
+~~~shell
+echo > .\tests\test_todos.py
+~~~
+
+Para executar este teste, você deve usar o comando abaixo no terminal:
+~~~shell
+task test tests/test_todos.py
+~~~
+
+Deu erro no teste, verificar
+
+![alt text](image-4.png)
+
+
+## Criando a migração da nova tabela
+~~~shell
+alembic revision --autogenerate -m "create todos table"
+~~~
+
+
+Depois que a migração for criada, precisamos aplicá-la ao nosso banco de dados. Execute o comando alembic upgrade head para aplicar a migração.
+
+~~~shell
+alembic upgrade head
+~~~
+
+Agora que a migração foi aplicada, nosso banco de dados deve ter uma nova tabela de tarefas. Para verificar, você pode abrir o banco de dados com o comando sqlite3 database.db e depois executar o comando .schema para ver o esquema do banco de dados.
+
+~~~shell
+sqlite3 database.db
+# ...
+sqlite> .schema
+# ...
+~~~
+
+## Endpoint de listagem
+
+### Criando uma factory para simplificar os testes
+
+#### Testes para esse endpoint
+
+#### Testando a Paginação
+
+#### Testando o Filtro por Título
+
+#### Testando o Filtro por Descrição
+
+#### Testando o Filtro por Estado
+
+#### Testando a Combinação de Filtros de Estado, Título e Descrição
+
+#### Executando os testes
+~~~shell
+task format  
+task test tests/test_todos.py  
+~~~
+
+Meu teste deu erro, depois voltar aqui e rever o código*
+
+
+## Endpoint de Alteração
+
+### Testes para o Endpoint de Alteração
+~~~shell
+task format  
+task test tests/test_todos.py  
+~~~
+
+Meu teste deu erro, depois voltar aqui e rever o código*
+
+## Endpoint de Deleção
+
+### Testes para o Endpoint de Deleção
+
+~~~shell
+task format  
+task test tests/test_todos.py  
+~~~
+
+Meu teste deu erro, depois voltar aqui e rever o código* (não dá para executar todas as aulas sem o vídeo, essa aqui por exemplo cria o arquivo `tests.factories` e não vi no documento)
+~~~shell
+echo > .\tests\factories.py
+~~~
+
+
+## Atualizando o repositório - Commit
+Caso seja um repositório de desenvolvimento compartilhado, verificar se no repositório remoto há algo novo e pedir para baixar.
+~~~shell
+git pull
+~~~
+
+Verificar o status do repositório para ver as mudanças realizadas:
+~~~shell
+git status
+~~~
+
+Se tudo estiver ok, adicionar os arquivos, comitar e por fim enviar para o repositório remoto.
+~~~shell
+git add . 
+git commit -m "Implementado os endpoints de tarefas." 
+git push --set-upstream origin main 
+~~~
+
 
 
 
 
 [🐍 FIM VOLTAR DAQUI ...🐍]
 
-# Aula 09 Criando Rotas CRUD para Gerenciamento de Tarefas em FastAPI
-## Criando a migração da nova tabela
-~~~shell
-alembic revision --autogenerate -m "create todos table"
-~~~
-
-Depois que a migração for criada, precisamos aplicá-la ao nosso banco de dados. Execute o comando alembic upgrade head para aplicar a migração.
-~~~shell
-alembic upgrade head
-~~~
 
 
 
-Atualizando o repositório.
-~~~shell
-git add .
-git commit -m "Implementado os endpoints de tarefas"
-~~~
+
 
 
 # Aula 10 Dockerizando a nossa aplicação e introduzindo o PostgreSQL
