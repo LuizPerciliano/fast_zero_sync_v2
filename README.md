@@ -751,7 +751,6 @@ git push --set-upstream origin main
 ~~~
 
 
-[🐍 INICIO VOLTAR DAQUI ...🐍]
 # Aula 09 Criando Rotas CRUD para Gerenciamento de Tarefas em FastAPI
 ## Criando a migração da nova tabela
 
@@ -883,24 +882,131 @@ git push --set-upstream origin main
 
 
 
-
-
-[🐍 FIM VOLTAR DAQUI ...🐍]
-
-
-
-
-
-
+<!--
+Rememorar como é para se autenticar e talvez por isso não aparece o swgger com [users] usuários*
+-->
 
 # Aula 10 Dockerizando a nossa aplicação e introduzindo o PostgreSQL
+<!-- Não assisti o vídeo dessa aula 
+https://www.youtube.com/watch?v=bpBbbUgmdMs&list=PLOQgLBuj2-3IuFbt-wJw2p2NiV9WTRzIP
+-->
+Objetivos da aula:
+
+- Compreender os conceitos básicos do Docker
+- Entender como criar uma imagem Docker para a nossa aplicação FastAPI
+- Aprender a rodar a aplicação utilizando Docker
+- Introduzir o conceito de Docker Compose para gerenciamento de múltiplos contêineres
+- Aprender o que é um Dockerfile e sua estrutura
+- Entender os benefícios e motivos da mudança de SQLite para PostgreSQL
+
+### pré-requisitos
+Para este caso específico, tenho o Docker Desktop instalado no windows com o serviço sempre parado, logo, precisa iniciar o serviço do docker.
 
 ## Criando nosso Dockerfile
-Para criar um container Docker, escrevemos uma lista de passos de como construir o ambiente para execução da nossa aplicação em um arquivo chamado Dockerfile. Ele define o ambiente de execução, os comandos necessários para preparar o ambiente e o comando a ser executado quando um contêiner é iniciado a partir da imagem.
 
-Uma das coisas interessantes sobre Docker é que existe um Hub de containers prontos onde a comunidade hospeda imagens "prontas", que podemos usar como ponto de partida. Por exemplo, a comunidade de python mantém um grupo de imagens com o ambiente python pronto para uso. Podemos partir dessa imagem com o python já instalado adicionar os passos para que nossa aplicação seja executada.
+### Introduzindo o postgreSQL
+#### Usar a Sintaxe Correta para cada SO Continuação de Linhas no PowerShell
+~~~shell
+# Sintaxe para windows
+docker run `
+    --name app_database_v2 `
+    -e POSTGRES_USER=app_user `
+    -e POSTGRES_DB=app_db `
+    -e POSTGRES_PASSWORD=app_password `
+    -p 5432:5432 `
+    postgres
+~~~
 
-Aqui está um exemplo de Dockerfile para executar nossa aplicação:
+#### Comando para Unix/Linux
+~~~shell
+docker run \
+    --name app_database_v2 \ #nome da imagem docker
+    -e POSTGRES_USER=app_user \
+    -e POSTGRES_DB=app_db \ #nome do banco de dados
+    -e POSTGRES_PASSWORD=app_password \
+    -p 5432:5432 \
+    postgres
+~~~
+
+Com o banco de dados criado, que pode ser verificado no Docker Desktop, vamos testar acesso com uma ferramenta de BD, neste caso é o DBeaver.
+
+Verificando o banco de dados docker via linha de comando:
+~~~shell
+docker ps -a -q # verifica os containers existentes inclusive os desligados
+docker container start 6c13bcfa5e5f # iniciar o container
+docker ps # verifica os containers iniciados
+~~~
+
+### Adicionando o suporte ao PostgreSQL na nossa aplicação
+~~~shell
+poetry add "psycopg[binary]"
+~~~
+
+Para ajustar a conexão com o PostgreSQL, modifique seu arquivo `.env` para incluir a seguinte string de conexão:
+~~~shell
+DATABASE_URL="postgresql+psycopg://app_user:app_password@localhost:5432/app_db"
+~~~
+
+
+Atualizar o banco de dados com suas respectivas tabelas com o comando abaixo.
+~~~shell
+alembic upgrade head
+~~~
+
+Abrir o Dbeaver para ver o banco de dados e as tabelas
+
+Agora testar ver se a aplicação está rodando.
+~~~shell
+task run
+~~~
+
+Testando, abrir a aplicação e tentar criar um usuário no http://127.0.0.1:8000/docs
+Caso tenha sido criando tentar logar com o usuário criado.
+
+{
+  "username": "user@example.com",
+  "password": "string"
+}
+
+Agora tentar criar um todo e se tudo ok, ir novamente no banco de dados para ver se também salvou em base de dados.
+
+Oh Glória, tudo ok por aqui até o momento.
+
+
+## Resolvendo os testes que estavam rodando no sqlite
+<!-- Vídeo Aula 10 - 00:27:09 -->
+
+### Ajustando o arquivo `conftest.py`
+Agora todos os meus testes passaram, mas dependem do banco de dados em pé.
+
+
+### Testando com Docker
+Existe uma biblioteca python que gerencia as dependências de containers externos
+para que a aplicação seja executada. O TestContainers
+~~~shell
+poetry add --group dev testcontainers
+~~~
+
+Ajustando programa ... e testando novamente ...
+~~~shell
+task test -s
+~~~
+
+
+[🐍 INICIO VOLTAR DAQUI ...🐍]
+
+
+
+## Parte 2 - Criando a imagem do nosso projeto
+<!-- Vídeo Aula 10 - 00:51:28 -->
+
+Criando na raiz o arquivo `Dockerfile`
+~~~shell
+echo > Dockerfile
+~~~
+
+
+Aqui está um exemplo de Dockerfile para criar o ambiente e executar nossa aplicação:
 ~~~shell
 FROM python:3.12-slim
 ENV POETRY_VIRTUALENVS_CREATE=false
@@ -914,14 +1020,17 @@ RUN poetry config installer.max-workers 10
 RUN poetry install --no-interaction --no-ansi
 
 EXPOSE 8000
-CMD poetry run uvicorn --host 0.0.0.0 fast_zero.app:app
+CMD poetry run uvicorn --host 0.0.0.0 fast_zero_v2.app:app
 ~~~
 
 ## Criando a imagem
 Para criar uma imagem Docker a partir do Dockerfile, usamos o comando docker build. O comando a seguir cria uma imagem chamada "fast_zero":
 ~~~shell
-docker build -t "fast_zero" .
+docker build -t "fast_zero_v2" .
 ~~~
+
+No terminal funcionou mas no VSCODe não, deu acesso negado em algum arquivo, e o terminal está como adm.
+
 
 Então verificaremos se a imagem foi criada com sucesso usando o comando:
 ~~~shell
@@ -930,60 +1039,19 @@ docker images
 
 ## Executando o container
 ~~~shell
-docker run -it --name fastzeroapp -p 8000:8000 fast_zero:latest
+docker run -it --name fastzeroappv2 -p 8000:8000 fast_zero_v2:latest
 ~~~
 
 ~~~shell
 curl http://localhost:8000
 ~~~
 
-## Introduzindo o postgreSQL
-~~~shell
-docker run -d \
-    --name app_database \
-    -e POSTGRES_USER=app_user \
-    -e POSTGRES_DB=app_db \
-    -e POSTGRES_PASSWORD=app_password \
-    -p 5432:5432 \
-    postgres
-~~~
-
-No PostgreSQL, o diretório padrão para armazenamento de dados é /var/lib/postgresql/data. Mapeamos esse diretório para um volume (neste caso "pgdata") em nossa máquina host para garantir a persistência dos dados:
-~~~shell
-docker run -d \
-    --name app_database \
-    -e POSTGRES_USER=app_user \
-    -e POSTGRES_DB=app_db \
-    -e POSTGRES_PASSWORD=app_password \
-    -v pgdata:/var/lib/postgresql/data \
-    -p 5432:5432 \
-    postgres
-~~~
-
-## Adicionando o suporte ao PostgreSQL na nossa aplicação
-~~~shell
-poetry add "psycopg[binary]"
-~~~
-
-Para ajustar a conexão com o PostgreSQL, modifique seu arquivo .env para incluir a seguinte string de conexão:
-~~~shell
-DATABASE_URL="postgresql+psycopg://app_user:app_password@localhost:5432/app_db"
-~~~
-
-Para que a instalação do psycopg esteja na imagem docker, precisamos fazer um novo build. Para que a nova versão do pyproject.toml seja copiada e os novos pacotes sejam instalados:
-~~~shell
-docker rm fastzeroapp 
-docker build -t "fast_zero" 
-docker run -it --name fastzeroapp -p 8000:8000 fast_zero:latest
-~~~
-
-~~~shell
-docker exec -it fastzeroapp poetry run alembic upgrade head
-~~~
-
-
-## Simplificando nosso fluxo com docker-compose
+## Parte 3 - Simplificando nosso fluxo com docker-compose
 Criação do compose.yaml
+~~~shell
+echo > compose.yaml
+~~~
+
 ~~~shell
 services:
   fastzero_database:
@@ -998,7 +1066,8 @@ services:
       - "5432:5432"
 
   fastzero_app:
-    image: fastzero_app
+    image: fastzero_app_v2
+    entrypoint: ./entrypoint.sh
     build: .
     ports:
       - "8000:8000"
@@ -1015,8 +1084,25 @@ volumes:
 docker-compose up
 ~~~
 
+Caso dê algum erro de porta, derrube as imagens e crie o compose novamente.
+
+<!-- Vídeo Aula 10 - 01:24:41 o meu está dando erro com portas já usadas-->
+
+![alt text](image-5.png)
+
+Extra
+~~~shell
+poetry add ... tolong #biblioteca que auxilia olhar e pesquisar os logs
+~~~
+
+
 ## Implementando o Entrypoint
 Criamos um script chamado entrypoint.sh que irá preparar nosso ambiente antes de a aplicação iniciar:
+~~~shell
+echo > entrypoint.sh
+~~~
+
+
 ~~~shell
 #!/bin/sh
 
@@ -1032,17 +1118,11 @@ poetry run uvicorn --host 0.0.0.0 --port 8000 fast_zero.app:app
 
 Incluímos o entrypoint no nosso serviço no arquivo compose.yaml, garantindo que esteja apontando para o script correto:
 
-compose.yaml
-~~~shell
-  fastzero_app:
-    image: fastzero_app
-    entrypoint: ./entrypoint.sh
-    build: .
-~~~
-
 ~~~shell
 docker-compose up --build
 ~~~
+
+Caso dê algum erro de execução no arquivo entrypoint, precisa dar poder de execução no mesmo.
 
 ~~~shell
 docker-compose up -d fastzero_database
@@ -1052,18 +1132,33 @@ docker-compose up -d fastzero_database
 poetry add --group dev testcontainers
 ~~~
 
-
-
-
-
-Atualizando o repositório.
+## Atualizando o repositório - Commit
+Caso seja um repositório de desenvolvimento compartilhado, verificar se no repositório remoto há algo novo e pedir para baixar.
 ~~~shell
-git add .
-git commit -m "Dockerizando nossa aplicação e inserindo o PostgreSQL"
-git push
+git pull
+~~~
+
+Verificar o status do repositório para ver as mudanças realizadas:
+~~~shell
+git status
+~~~
+
+Se tudo estiver ok, adicionar os arquivos, comitar e por fim enviar para o repositório remoto.
+~~~shell
+git add . 
+git commit -m "Dokerizando o projeto." 
+git push --set-upstream origin main 
 ~~~
 
 
+
+
+
+
+
+
+
+[🐍 FIM VOLTAR DAQUI ...🐍]
 # Aula 11 Automatizando os testes com Integração Contínua (CI)
 Configurando o workflow de CI
 As configurações dos workflows no GitHub Actions são definidas em um arquivo YAML localizado em um path especificado pelo github no repositório .github/workflows/. Dentro desse diretório podemos criar quantos workflows quisermos. Iniciaremos nossa configuração com um único arquivo que chamaremos de pipeline.yaml:
