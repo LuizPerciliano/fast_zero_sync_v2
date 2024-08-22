@@ -32,7 +32,7 @@ def engine():
 
 
 @pytest.fixture
-def session():
+def session(engine):
     table_registry.metadata.create_all(engine)
     with Session(engine) as session:
         yield session

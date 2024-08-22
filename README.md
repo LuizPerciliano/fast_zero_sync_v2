@@ -1156,7 +1156,9 @@ git log
 
 [🐍 INICIO VOLTAR DAQUI ...🐍]
 # Aula 11 Automatizando os testes com Integração Contínua (CI)
-<!-- https://fastapidozero.dunossauro.com/11/ -->
+<!-- https://fastapidozero.dunossauro.com/11/ 
+https://github.com/features/actions
+-->
 <!-- Minha aplicação não está rodando por erro de porta, verificar 
 qd for iniciar a aula, reiniciar a máquina.
 -->
@@ -1201,54 +1203,30 @@ git commit -m "Instalação do Python no CI"
 git push 
 ~~~
 
-Para isso, devemos criar um step para cada uma dessas ações no nosso job test. Desta:
-`.github/workflows/pipeline.yaml`
+Atualizando as dependencias de arquivos do projeto `.github/workflows/pipeline.yaml`
+
+Atualizando o repositório e ver se executou os testes
 ~~~shell
-    steps:
-      - name: Instalar o python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Instalar o poetry
-        run: pipx install poetry
-
-      - name: Instalar dependências
-        run: poetry install
-
-      - name: Executar testes
-        run: poetry run task test
-~~~
-
-Atualizando o repositório.
-~~~shell
-git add .
-git commit -m "Adicionando o checkout ao pipeline"
-git push
+git add .\.github\workflows\pipeline.yaml
+git commit -m "Executando os testes" 
+git push 
 ~~~
 
 ## Configuração de variáveis de ambiente no Actions
-[...]
+Com erro nos testes precisa configurar as variáveis de ambiente usando o gh. No código abaixo ele vai criar segredo para todas as variáveis do arquivo.
 
 ~~~shell
 gh secret set -f .env
 ~~~
 
-`.github/workflows/pipeline.yaml`
+Verificando os segredos
 ~~~shell
-jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      ALGORITHM: ${{ secrets.ALGORITHM }}
-      ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
+cat .env
 ~~~
 
+Agora ir no repositório https://github.com/LuizPerciliano/fast_zero_sync_v2/actions/runs/10501322321/job/29091123627 e atualizar "Re-run jobs" apertando o botão na aplicação.
 
-
+Deu erro pois faltou atualizar os segredos no `.github/workflows/pipeline.yaml`
 
 ## Atualizando o repositório - Commit
 Caso seja um repositório de desenvolvimento compartilhado, verificar se no repositório remoto há algo novo e pedir para baixar.
