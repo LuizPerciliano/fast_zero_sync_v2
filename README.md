@@ -993,10 +993,6 @@ task test -s
 ~~~
 
 
-[🐍 INICIO VOLTAR DAQUI ...🐍]
-
-
-
 ## Parte 2 - Criando a imagem do nosso projeto
 <!-- Vídeo Aula 10 - 00:51:28 -->
 
@@ -1150,16 +1146,37 @@ git commit -m "Dokerizando o projeto."
 git push --set-upstream origin main 
 ~~~
 
+Conferindo se subiu tudo ok
+~~~shell
+git log
+~~~
 
 
 
 
-
-
-
-
-[🐍 FIM VOLTAR DAQUI ...🐍]
+[🐍 INICIO VOLTAR DAQUI ...🐍]
 # Aula 11 Automatizando os testes com Integração Contínua (CI)
+<!-- https://fastapidozero.dunossauro.com/11/ -->
+<!-- Minha aplicação não está rodando por erro de porta, verificar 
+qd for iniciar a aula, reiniciar a máquina.
+-->
+
+## Preparando o ambiente
+<!-- No projeto do duno tem o diretório `.git` que não sei de onde é.
+-->
+Criando os diretórios
+~~~shell
+mkdir .github
+~~~
+
+~~~shell
+mkdir .github/workflows
+~~~
+
+~~~shell
+echo > .github/workflows/pipeline.yaml
+~~~
+
 Configurando o workflow de CI
 As configurações dos workflows no GitHub Actions são definidas em um arquivo YAML localizado em um path especificado pelo github no repositório .github/workflows/. Dentro desse diretório podemos criar quantos workflows quisermos. Iniciaremos nossa configuração com um único arquivo que chamaremos de pipeline.yaml:
 ~~~shell
@@ -1177,6 +1194,12 @@ jobs:
           python-version: '3.12'
 ~~~
 
+Atualizando o repositório.
+~~~shell
+git add . 
+git commit -m "Instalação do Python no CI" 
+git push 
+~~~
 
 Para isso, devemos criar um step para cada uma dessas ações no nosso job test. Desta:
 `.github/workflows/pipeline.yaml`
@@ -1225,13 +1248,43 @@ jobs:
 ~~~
 
 
-Atualizando o repositório.
+
+
+## Atualizando o repositório - Commit
+Caso seja um repositório de desenvolvimento compartilhado, verificar se no repositório remoto há algo novo e pedir para baixar.
 ~~~shell
-git add .
-git commit -m "Adicionando as variáveis de ambiente para o CI"
-git push
+git pull
 ~~~
 
+Verificar o status do repositório para ver as mudanças realizadas:
+~~~shell
+git status
+~~~
+
+Se tudo estiver ok, adicionar os arquivos, comitar e por fim enviar para o repositório remoto.
+~~~shell
+git add . 
+git commit -m "Adicionando as variáveis de ambiente para o CI"
+git push --set-upstream origin main 
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[🐍 FIM VOLTAR DAQUI ...🐍]
 # Aula 12 Fazendo deploy no Fly.io
 [...]
 
@@ -1244,6 +1297,11 @@ git push
 # Aula 13 Despedida e próximos passos
 [... ainda vai ter esta aula ...]
 
+
+# Final da Aplicação: passos para subir a aplicação após tudo finalizado 
+1. Entrar no diretório do projeto
+1. Ativar o ambiente virtual
+3. 
 
 # Projeto final
 
