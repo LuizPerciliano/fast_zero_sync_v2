@@ -1,4 +1,3 @@
-import factory
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -7,8 +6,19 @@ from testcontainers.postgres import PostgresContainer
 
 from fast_zero_v2.app import app
 from fast_zero_v2.database import get_session
-from fast_zero_v2.models import User, table_registry
+from fast_zero_v2.models import table_registry
 from fast_zero_v2.security import get_password_hash
+from tests.factories import UserFactory
+
+
+@pytest.fixture(scope='session')
+def engine():
+    with PostgresContainer('postgres:16', driver='psycopg') as postgres:
+
+        _engine = create_engine(postgres.get_connection_url())
+
+        with _engine.begin():
+            yield _engine
 
 
 @pytest.fixture
@@ -23,20 +33,14 @@ def client(session):
     app.dependency_overrides.clear()
 
 
-@pytest.fixture(scope='session')
-def engine():
-    with PostgresContainer('postgres:16', driver='psycopg') as postgres:
-        _engine = create_engine(postgres.get_connection_url())
-        with _engine.begin():
-            yield _engine
-
-
 @pytest.fixture
 def session(engine):
     table_registry.metadata.create_all(engine)
+
     with Session(engine) as session:
         yield session
         session.rollback()
+
     table_registry.metadata.drop_all(engine)
 
 
@@ -75,12 +79,3 @@ def token(client, user):
         data={'username': user.email, 'password': user.clean_password},
     )
     return response.json()['access_token']
-
-
-class UserFactory(factory.Factory):
-    class Meta:
-        model = User
-
-    username = factory.Sequence(lambda n: f'test{n}')
-    email = factory.LazyAttribute(lambda obj: f'{obj.username}@test.com')
-    password = factory.LazyAttribute(lambda obj: f'{obj.username}@example.com')

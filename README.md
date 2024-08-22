@@ -1249,6 +1249,9 @@ git push --set-upstream origin main
 
 
 
+git add . 
+git commit -m "ajustando erro no arquivo conftest"
+git push --set-upstream origin main 
 
 
 
