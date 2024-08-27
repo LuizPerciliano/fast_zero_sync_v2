@@ -1376,6 +1376,13 @@ https://fly.io/apps/fast-zero-v2/monitoring
 
 <!-- Voltar no minuto 00:50 da aula e tentar descobrir os erros, meu e do duno 
 https://youtu.be/Xt7A5QnsSeo?list=PLOQgLBuj2-3IuFbt-wJw2p2NiV9WTRzIP
+
+
+
+
+Incluido no `pyproject.toml`
+packages = [{include = "fast_zero"}]
+
 -->
 
 ## Migrations
@@ -1429,25 +1436,39 @@ git log
 [... ainda vai ter esta aula ...]
 
 
+
+---
+
 # Final da Aplicação: passos para subir a aplicação e ou ajustar o projeto após tudo finalizado 
 1. Entrar no diretório do projeto e Ativar o ambiente virtual
 ~~~shell
 # se tiver docker, iniciar o serviço
   # Get-Service -Name com.docker.service # verifica o seviço
   # Start-Service -Name com.docker.service
+  # iniciar as máquinas necessárias
 
 Start-Service -Name com.docker.service
+docker start app_database_v2
+# Verficar se tem algo a comitar
 clear
 cd C:\projetos\projetos-GIT\fast_zero_v2\ 
 poetry shell 
+
+
+
+
+
+fly deploy --local-only --ha=false
+
+# Verificar se a aplicação está ON
+flyctl apps list
+
 ~~~
 
-1. xx
-
-3. 
+---
 
 # Projeto final
-
+Em andamento
 ---
 
 XXX
@@ -1464,3 +1485,12 @@ print s
 
     
 
+git add . 
+git commit -m "Ajustando arquivos para deploy no Fly.io"
+git push --set-upstream origin main 
+
+
+
+
+
+fly deploy --local-only --ha=false
