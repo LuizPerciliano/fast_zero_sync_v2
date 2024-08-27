@@ -1,0 +1,47 @@
+[33mcommit 0185d6f1353e796d60f24435642e1f2384a31a56[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Perciliano <luizperciliano@gmail.com>
+Date:   Wed Aug 21 03:46:28 2024 -0300
+
+    Dokerizando o projeto.
+
+[33mcommit e5f99ab6ce017178314f3a937050a5b7a6772fdf[m
+Author: Perciliano <luizperciliano@gmail.com>
+Date:   Sat Aug 10 01:52:25 2024 -0300
+
+    Implementado os endpoints de tarefas.
+
+[33mcommit 01ecf489d99611c7a6afb0f37ee89faa46b01e8a[m
+Author: Perciliano <luizperciliano@gmail.com>
+Date:   Sat Aug 10 00:33:13 2024 -0300
+
+    Implementando o refresh do token e testes de autorização.
+
+[33mcommit 847757e6b605085ed5406678c7aec58fafbdd05d[m
+Author: Perciliano <luizperciliano@gmail.com>
+Date:   Fri Aug 9 23:28:01 2024 -0300
+
+    Refatorando estrutura do projeto: Criado routers para Users e Auth; movido constantes para variáveis de ambiente.
+
+[33mcommit b27916f17b01bf617cb2f01c280174ef69a33f2b[m
+Author: Perciliano <luizperciliano@gmail.com>
+Date:   Mon Jul 29 04:25:12 2024 -0300
+
+    Revisando as aulas com um novo projeto criado.Atualizando endpoints para usar o banco de dados real.
+
+[33mcommit db097a09f7e2b0dc5aef39de28bfdc3f6a2fd707[m
+Author: Perciliano <luizperciliano@gmail.com>
+Date:   Sat Jul 27 23:10:16 2024 -0300
+
+    Adicionada a primeira migração com Alembic. Criada tabela de usuários.
+
+[33mcommit 2c6f1f2821f7f25dbc451527ff4db9414deb45d0[m
+Author: Perciliano <luizperciliano@gmail.com>
+Date:   Sat Jul 27 06:46:34 2024 -0300
+
+    Configuração inicial do projeto
+
+[33mcommit ce0e1c8da696ac35f4682f388ca20718c08810f0[m
+Author: Luiz Perciliano <luizperciliano@gmail.com>
+Date:   Sat Jul 27 06:26:48 2024 -0300
+
+    Initial commit

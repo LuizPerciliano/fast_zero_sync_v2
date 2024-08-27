@@ -1153,8 +1153,6 @@ git log
 
 
 
-
-[🐍 INICIO VOLTAR DAQUI ...🐍]
 # Aula 11 Automatizando os testes com Integração Contínua (CI)
 <!-- https://fastapidozero.dunossauro.com/11/ 
 https://github.com/features/actions
@@ -1246,18 +1244,14 @@ git commit -m "Adicionando as variáveis de ambiente para o CI"
 git push --set-upstream origin main 
 ~~~
 
+Verificar o job correto se está ok.
 
+## Dando um up nos testes antes do commit remoto
+Ferramenta: https://github.com/nektos/act
 
+Com o uso da ferramenta acima, até melhorando a visualização dos logs do git para casos de muitos ajustes de erros.
 
-git add . 
-git commit -m "ajustando erro no arquivo conftest"
-git push --set-upstream origin main 
-
-
-
-
-
-
+Pesquisar sobre o act e implantar.
 
 
 
@@ -1265,23 +1259,191 @@ git push --set-upstream origin main
 
 
 
-[🐍 FIM VOLTAR DAQUI ...🐍]
+
+
+
+
+
+[🐍 INICIO VOLTAR DAQUI ...🐍]
 # Aula 12 Fazendo deploy no Fly.io
-[...]
+<!-- https://fastapidozero.dunossauro.com/12/ 
+https://youtu.be/Xt7A5QnsSeo?list=PLOQgLBuj2-3IuFbt-wJw2p2NiV9WTRzIP
+https://fly.io/
+
+No projeto do duno tem o diretório `.git` que não sei de onde é.
+-->
+
+## O Fly.io
+O Fly.io é uma plataforma de deploy que nos permite lançar nossas aplicações na nuvem e que oferece serviços para diversas linguagens de programação e frameworks como Python e Django, PHP e Laravel, Ruby e Rails, Elixir e Phoenix, etc.
+
+### Flyclt
+Uma das formas de interagir com a plataforma é via uma aplicação de linha de comando disponibilizada pelo Fly, o flyctl.
+
+Instalando no windows: https://fly.io/docs/flyctl/install/
+~~~shell
+pwsh -Command "iwr https://fly.io/install.ps1 -useb | iex"
+~~~
+
+Provavelmente será necessário reiniciar o terminal, logo após teste o comando abaixo:
+~~~shell
+flyctl version
+~~~
+
+Agora precisa auntenticar no flyctl
+
+
+## Configurações para o deploy
+Agora com o flyctl devidamente configurado. Podemos iniciar o processo de lançamento da nossa aplicação. O flyctl tem um comando específico para lançamento, o launch. Contudo, o comando launch é bastante interativo e ao final dele, o deploy da aplicação é executado. Para evitar o deploy no primeiro momento, pois ainda existem coisas para serem configuradas, vamos executá-lo da seguinte forma:
 
 ~~~shell
-git add .
-git commit -m "Adicionando arquivos gerados pelo Fly"
-git push
+flyctl launch --no-deploy
 ~~~
+
+A pergunta feita ao final dessa seção Do you want to tweak these settings before proceeding? pode ser traduzida como: Você deseja ajustar essas configuração antes de prosseguir?. Diremos que sim, digitando Y e em seguida Enter.
+
+Após configurar similar a imagem a abaixo, selecione confirma:
+![alt text](image-6.png)
+
+
+Acessos:
+- Admin URL: https://fly.io/apps/fast-zero-777
+
+
+## Configuração dos segredos
+Para que nossa aplicação funcione de maneira adequada, todas as variáveis de ambiente precisam estar configuradas no ambiente. O flyctl tem um comando para vermos as variáveis que já foram definidas no ambiente e também para definir novas. O comando secrets.
+
+Para vermos as variáveis já configuradas no ambiente, podemos executar o seguinte comando:
+~~~shell
+flyctl secrets list
+~~~
+
+Uma coisa que podemos notar na resposta do secrets é que ele leu nosso arquivo .env e adicionou a variável de ambiente DATABASE_URL com base no postgres que foi criado durante o comando launch. Um ponto de atenção que devemos tomar nesse momento, é que a variável criada é iniciada com o prefixo postgres://. Para que o sqlalchemy reconheça esse endereço como válido, o prefixo deve ser alterado para postgresql+psycopg://. Para isso, usaremos a url fornecida pelo comando launch e alterar o prefixo.
+
+Desta forma, podemos registar a variável de ambiente DATABASE_URL novamente. Agora com o valor correto:
+
+~~~shell
+flyctl secrets set ALGORITHM="HS256"
+~~~
+
+~~~shell
+flyctl secrets set ACCESS_TOKEN_EXPIRE_MINUTES=30
+~~~
+
+Para secret_key, tem que ter uma ou gerar. Como gerar uma?
+
+~~~shell
+python
+import secrets
+secrets.token_hex(32)
+~~~
+
+Com o comando acima será gerado um segredo, basta copiar no comando abaixo e voilá.
+
+~~~shell
+flyctl secrets set SECRET_KEY="your-secret-key"
+~~~
+
+
+Uma coisa que podemos notar na resposta do secrets é que ele leu nosso arquivo .env e adicionou a variável de ambiente DATABASE_URL com base no postgres que foi criado durante o comando launch. Um ponto de atenção que devemos tomar nesse momento, é que a variável criada é iniciada com o prefixo postgres://. Para que o sqlalchemy reconheça esse endereço como válido, o prefixo deve ser alterado para postgresql+psycopg://. Para isso, usaremos a url fornecida pelo comando launch e alterar o prefixo.
+
+Desta forma, podemos registar a variável de ambiente DATABASE_URL novamente. Agora com o valor correto:
+
+~~~shell
+flyctl secrets set DATABASE_URL="postgresql+psycopg://xxx,kkk777"
+~~~
+
+## Deploy da aplicação
+Para efetuarmos o deploy da aplicação, podemos usar o comando deploy doflyctl. Uma coisa interessante nessa parte do processo é que o Fly pode fazer o deploy de duas formas:
+
+Copiar seus arquivos e fazer o build do docker na nuvem;
+Você pode fazer o build localmente e subir apenas o container para um repositório disponível no Fly.
+Optaremos por fazer o build localmente para não serem alocadas duas máquinas em nossa aplicação1. Para executar o build localmente usamos a flag --local-only.
+
+O Fly sobre duas instâncias por padrão da nossa aplicação para melhorar a disponibilidade do app. Como vamos nos basear no uso gratuito, para todos poderem executar o deploy, adicionaremos a flag --ha=false ao deploy. Para desativamos a alta escalabilidade:
+
+~~~shell
+fly deploy --local-only --ha=false
+~~~
+
+Verificando o log da aplicação.
+~~~shell
+fly logs -a fast-zero-v2
+ou 
+fly logs -a fast-zero-v2 | tl # tem que ter a biblioteca tl instalada
+ou
+https://fly.io/apps/fast-zero-v2/monitoring
+~~~
+
+<!-- Voltar no minuto 00:50 da aula e tentar descobrir os erros, meu e do duno 
+https://youtu.be/Xt7A5QnsSeo?list=PLOQgLBuj2-3IuFbt-wJw2p2NiV9WTRzIP
+-->
+
+## Migrations
+Agora que nosso container já está em execução no fly, podemos executar o comando de migração dos dados, pois ele está na mesma rede do postgres configurado pelo Fly2. Essa conexão é feita via SSH e pode ser efetuada com o comando ssh do flyctl.
+
+Podemos fazer isso de duas formas, acessando efetivamente o container remotamente ou enviando somente um comando para o Fly. Optarei pela segunda opção, pois ela não é interativa e usará somente uma única chamada do shell. Desta forma:
+
+~~~shell
+flyctl ssh console -a fast-zero-v2 -C "poetry run alembic upgrade head"
+~~~
+
+
+[...]
+
+## Atualizando o repositório - Commit
+Caso seja um repositório de desenvolvimento compartilhado, verificar se no repositório remoto há algo novo e pedir para baixar.
+~~~shell
+git pull
+~~~
+
+Verificar o status do repositório para ver as mudanças realizadas:
+~~~shell
+git status
+~~~
+
+Se tudo estiver ok, adicionar os arquivos, comitar e por fim enviar para o repositório remoto.
+~~~shell
+git add . 
+git commit -m "Adicionando arquivos gerados pelo Fly"
+git push --set-upstream origin main 
+~~~
+
+Conferindo se subiu tudo ok
+~~~shell
+git log
+~~~
+[🐍 FIM VOLTAR DAQUI ...🐍]
+
+
+
+
+
+
+
+
+
+
+
 
 # Aula 13 Despedida e próximos passos
 [... ainda vai ter esta aula ...]
 
 
-# Final da Aplicação: passos para subir a aplicação após tudo finalizado 
-1. Entrar no diretório do projeto
-1. Ativar o ambiente virtual
+# Final da Aplicação: passos para subir a aplicação e ou ajustar o projeto após tudo finalizado 
+1. Entrar no diretório do projeto e Ativar o ambiente virtual
+~~~shell
+# se tiver docker, iniciar o serviço
+  # Get-Service -Name com.docker.service # verifica o seviço
+  # Start-Service -Name com.docker.service
+
+Start-Service -Name com.docker.service
+clear
+cd C:\projetos\projetos-GIT\fast_zero_v2\ 
+poetry shell 
+~~~
+
+1. xx
+
 3. 
 
 # Projeto final
