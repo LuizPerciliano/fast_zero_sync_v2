@@ -84,14 +84,11 @@ Criação do app.
 ~~~shell
 echo > fast_zero_v2/app.py
 ~~~
-[melhorar esta criação pelo terminal]
-
 
 Acessando e codificando no app.
 ~~~shell
 code fast_zero_v2/app.py
 ~~~
-[... codificando ...]
 
 Executar a função pelo terminal em modo interativo para chamar a função.
 ~~~shell
@@ -103,7 +100,6 @@ Depois execute a função para obter o resultado.
 >>> read_root()
 ~~~
 
-[... codificando ...]
 
 Antes de iniciar a aplicação, habilitar o ambiente virtual, para que o python consiga enxergar as dependências instaladas.
 ~~~shell
@@ -152,7 +148,6 @@ Criação dos arquivos de teste.
 ~~~shell
 echo > tests/test_app.py
 ~~~
-[...]
 
 ~~~shell
 task test
@@ -216,7 +211,8 @@ git commit -m "Configuração inicial do projeto"
 git push
 ~~~
 
-[... deu muito ruim nessa parte do git, refazer outro projeto com cuidado]
+<!-- https://github.com/markdown-templates/markdown-emojis -->
+Deu muito ruim nessa parte do git, refazer outro projeto com cuidado e anotar corretamente os passos ⚠ :bowtie:
 
 
 
@@ -254,9 +250,6 @@ s.getsockname()[0]
 
 Agora basta acessar a aplicação pelo endereço: http://192.168.0.5:8000/, ficando acessível também por outras máquinas dentro dessa rede, assim como o celular.
 
-[... desenvolvendo e incrementando o projeto ...]
-
-
 Criando novo arquivo para testes e aprendizado de endpoints.
 ~~~shell
 type nul > fast_zero_v2/aula_00.py
@@ -285,8 +278,6 @@ fastapi dev fast_zero_v2/aula_00.py
 echo > fast_zero_v2/schemas.py
 ~~~
 
-[... desenvolvendo e incrementando o projeto ...]
-
 
 # Aula 03 Estruturando o Projeto e Criando Rotas CRUD
 ## Implementando endpoints
@@ -308,7 +299,7 @@ class UserSchema(BaseModel):
     password: str
 ~~~
 
-[... desenvolvendo e incrementando o projeto ... estudar mais esta aula]
+<!-- ... desenvolvendo e incrementando o projeto ... estudar mais esta aula]-->
 
 ## Validação e pydantic
 
@@ -351,11 +342,9 @@ Agora definiremos nosso modelo User. No diretório fast_zero, crie um novo arqui
 ~~~shell
 echo > fast_zero_v2/models.py
 ~~~
-[...]
 
 ## Testando as Tabelas
 Criaremos uma fixture para a conexão com o banco de dados chamada session no arquivo `tests/conftest.py`.
-[...]
 
 ### Criando um Teste para a Nossa Tabela
 Agora, no arquivo test_db.py, escreveremos um teste para a criação de um usuário. Este teste adiciona um novo usuário ao banco de dados, faz commit das mudanças, e depois verifica se o usuário foi devidamente criado consultando-o pelo nome de usuário. Se o usuário foi criado corretamente, o teste passa. Caso contrário, o teste falha, indicando que há algo errado com nossa função de criação de usuário.
@@ -363,7 +352,6 @@ Agora, no arquivo test_db.py, escreveremos um teste para a criação de um usuá
 ~~~shell
 echo > tests/test_db.py
 ~~~
-[...]
 
 #### Executando o teste
 
@@ -388,13 +376,13 @@ task run
 ~~~shell
 echo > fast_zero_v2/settings.py
 ~~~
-[...]
+
 
 Agora, definiremos o DATABASE_URL no nosso arquivo de ambiente .env. Crie o arquivo na raiz do projeto e adicione a seguinte linha:
 ~~~shell
 echo > .env
 ~~~
-[...]
+
 
 ~~~shell
 echo 'database.db' >> .gitignore
@@ -412,7 +400,7 @@ alembic init migrations
 
 ### Criando uma migração automática
 Com o Alembic devidamente instalado e iniciado, agora é o momento de gerar nossa primeira migração. Mas, antes disso, precisamos garantir que o Alembic consiga acessar nossas configurações e modelos corretamente. Para isso, faremos algumas alterações no arquivo migrations/env.py.
-[...]
+
 
 Para criar a migração, utilizamos o seguinte comando:
 ~~~shell
@@ -430,18 +418,13 @@ Vamos acessar o console do sqlite e verificar se isso foi feito. Precisamos cham
 ~~~shell
 sqlite3 database.db
 ~~~
-[...]
-
 
 Para aplicar as migrações, usamos o comando upgrade do CLI Alembic. O argumento head indica que queremos aplicar todas as migrações que ainda não foram aplicadas:
 ~~~shell
 alembic upgrade head
 ~~~
-[...]
-
 
 Agora, se examinarmos nosso banco de dados novamente:
-[...]
 
 ## Commit
 Primeiro, verificaremos o status do nosso repositório para ver as mudanças que fizemos:
@@ -452,8 +435,6 @@ git status
 ~~~shell
 git add . 
 ~~~
-
-![alt text](image.png)
 
 ~~~shell
 git commit -m "Adicionada a primeira migração com Alembic. Criada tabela de usuários."
@@ -471,37 +452,27 @@ echo > .\fast_zero_v2\database.py
 ~~~
 
 ## Modificando o Endpoint POST /users
-[...]
 
 ### Testando o Endpoint POST /users com Pytest e Fixtures
 Alteraremos a nossa fixture client para substituir a função get_session que estamos injetando no endpoint pela sessão do banco em memória que já tínhamos definido para banco de dados.
-[...]
-
-Dá erro, logo ...
-[...]
 
 
 ## Modificando o Endpoint GET /users
-[...]
+
 ### Testando o Endpoint GET /users
-[...]
+
 ### Criando uma fixture para User
-[...]
 
 ### Integrando o Schema ao Model
 ajustando o arquivo `fast_zero/schemas.py` <p>
-[...]
 
 ## Modificando o Endpoint PUT /users
-[...]
 
 ### Adicionando o teste do PUT
-[...]
 
 ## Modificando o Endpoint DELETE /users
-[...]
+
 ### Adicionando testes para DELETE
-[...]
 
 
 ## Atualizando o repositório - Commit
@@ -538,7 +509,6 @@ echo > .\tests\test_security.py
 ~~~
 
 ## Modificando o endpoint de POST para encriptar a senha
-[...]
 
 ### Sobre o teste da POST /users/
 
@@ -552,13 +522,10 @@ poetry add python-multipart
 ~~~
 
 ### Criando um endpoint de geração do token
-[...]
 
 ### Testando /token
 
 ## Protegendo os Endpoints
-[...]
-
 
 ### Aplicação da proteção ao endpoint
 
@@ -645,12 +612,6 @@ echo > tests\test_users.py
 ~~~shell
 task test
 ~~~
-
-
-Resolver o trauma abaixo*
-![alt text](image-1.png)
-
-
 
 ## Refinando a Definição de Rotas com Annotated
 
@@ -1086,7 +1047,7 @@ Caso dê algum erro de porta, derrube as imagens e crie o compose novamente.
 
 ![alt text](image-5.png)
 
-Extra
+Extra - estudar isso depois
 ~~~shell
 poetry add ... tolong #biblioteca que auxilia olhar e pesquisar os logs
 ~~~
@@ -1255,22 +1216,14 @@ Pesquisar sobre o act e implantar.
 
 
 
-
-
-
-
-
-
-
-
-
-[🐍 INICIO VOLTAR DAQUI ...🐍]
 # Aula 12 Fazendo deploy no Fly.io
 <!-- https://fastapidozero.dunossauro.com/12/ 
 https://youtu.be/Xt7A5QnsSeo?list=PLOQgLBuj2-3IuFbt-wJw2p2NiV9WTRzIP
 https://fly.io/
 
 No projeto do duno tem o diretório `.git` que não sei de onde é.
+
+Descobrir o que é sentry
 -->
 
 ## O Fly.io
@@ -1293,7 +1246,8 @@ Agora precisa auntenticar no flyctl
 
 
 ## Configurações para o deploy
-Agora com o flyctl devidamente configurado. Podemos iniciar o processo de lançamento da nossa aplicação. O flyctl tem um comando específico para lançamento, o launch. Contudo, o comando launch é bastante interativo e ao final dele, o deploy da aplicação é executado. Para evitar o deploy no primeiro momento, pois ainda existem coisas para serem configuradas, vamos executá-lo da seguinte forma:
+Agora com o flyctl devidamente configurado. Podemos iniciar o processo de lançamento da nossa aplicação. O flyctl tem um comando específico para lançamento, o launch. Contudo, o comando launch é bastante interativo e ao final dele, o deploy da aplicação é executado. Colocar a memória de 512 para cima.
+Para evitar o deploy no primeiro momento, pois ainda existem coisas para serem configuradas, vamos executá-lo da seguinte forma:
 
 ~~~shell
 flyctl launch --no-deploy
@@ -1326,7 +1280,7 @@ flyctl secrets set ALGORITHM="HS256"
 ~~~
 
 ~~~shell
-flyctl secrets set ACCESS_TOKEN_EXPIRE_MINUTES=30
+flyctl secrets set ACCESS_TOKEN_EXPIRE_MINUTES=300
 ~~~
 
 Para secret_key, tem que ter uma ou gerar. Como gerar uma?
@@ -1348,8 +1302,10 @@ Uma coisa que podemos notar na resposta do secrets é que ele leu nosso arquivo 
 
 Desta forma, podemos registar a variável de ambiente DATABASE_URL novamente. Agora com o valor correto:
 
+
+<!-- flictl no notion -->
 ~~~shell
-flyctl secrets set DATABASE_URL="postgresql+psycopg://xxx,kkk777"
+flyctl secrets set DATABASE_URL="postgresql+psycopg://postgres:nome-user-do-app:senhageradanofly@nome-da-maquina-db.flycast:5432/nome-bd-da-app”
 ~~~
 
 ## Deploy da aplicação
@@ -1370,18 +1326,17 @@ Verificando o log da aplicação.
 fly logs -a fast-zero-v2
 ou 
 fly logs -a fast-zero-v2 | tl # tem que ter a biblioteca tl instalada
-ou
-https://fly.io/apps/fast-zero-v2/monitoring
+ou site app
 ~~~
 
-<!-- Voltar no minuto 00:50 da aula e tentar descobrir os erros, meu e do duno 
-https://youtu.be/Xt7A5QnsSeo?list=PLOQgLBuj2-3IuFbt-wJw2p2NiV9WTRzIP
+<!--
+URL ADM:
+https://fly.io/apps/fast-zero-v2/monitoring
 
+APP:
+https://fast-zero-v2.fly.dev/
 
-
-
-Incluido no `pyproject.toml`
-packages = [{include = "fast_zero"}]
+até o minuto 00:57 ok, mas o meu não
 
 -->
 
@@ -1390,12 +1345,28 @@ Agora que nosso container já está em execução no fly, podemos executar o com
 
 Podemos fazer isso de duas formas, acessando efetivamente o container remotamente ou enviando somente um comando para o Fly. Optarei pela segunda opção, pois ela não é interativa e usará somente uma única chamada do shell. Desta forma:
 
+Entrando na máquina no fly.io
 ~~~shell
-flyctl ssh console -a fast-zero-v2 -C "poetry run alembic upgrade head"
+flyctl ssh console
 ~~~
 
 
-[...]
+
+Colocar no dockeringone:
+tests
+imagens
+
+Dentro do console é possível rodar a migração (alembic), pois as tabelas não foram criadas.
+
+~~~shell
+alembic upgrade head
+~~~
+
+ou rodar diretamente o comando abaixo:
+
+~~~shell
+flyctl ssh console -a fast-zero-v2 -C "poetry run alembic upgrade head"
+~~~
 
 ## Atualizando o repositório - Commit
 Caso seja um repositório de desenvolvimento compartilhado, verificar se no repositório remoto há algo novo e pedir para baixar.
@@ -1419,28 +1390,24 @@ Conferindo se subiu tudo ok
 ~~~shell
 git log
 ~~~
-[🐍 FIM VOLTAR DAQUI ...🐍]
-
-
-
-
-
-
-
-
-
-
 
 
 # Aula 13 Despedida e próximos passos
-[... ainda vai ter esta aula ...]
+<!-- https://youtu.be/33vn7dxg37U?list=PLOQgLBuj2-3IuFbt-wJw2p2NiV9WTRzIP 
+https://fastapidozero.dunossauro.com/13/
+-->
+Revisão geral e um tapa no readme.
 
+# Projeto final
+<!-- https://fastapidozero.dunossauro.com/14/
+-->
 
-
+Em andamento ...
 ---
 
-# Final da Aplicação: passos para subir a aplicação e ou ajustar o projeto após tudo finalizado 
-1. Entrar no diretório do projeto e Ativar o ambiente virtual
+# Final da Aplicação
+## Passos para subir a aplicação e ou ajustar o projeto após tudo finalizado 
+
 ~~~shell
 # se tiver docker, iniciar o serviço
   # Get-Service -Name com.docker.service # verifica o seviço
@@ -1449,48 +1416,12 @@ git log
 
 Start-Service -Name com.docker.service
 docker start app_database_v2
-# Verficar se tem algo a comitar
+# Verficar se tem algo a comitar ou puxar do repositório remoto
 clear
 cd C:\projetos\projetos-GIT\fast_zero_v2\ 
-poetry shell 
-
-
-
-
-
-fly deploy --local-only --ha=false
-
-# Verificar se a aplicação está ON
-flyctl apps list
-
-~~~
-
+poetry shell
+# codifica
+# testa
+# comita
+# deploy
 ---
-
-# Projeto final
-Em andamento
----
-
-XXX
-~~~shell
-
-~~~
-
-
-
-~~~python
-s = "Sintaxe do Pythong"
-print s
-~~~
-
-    
-
-git add . 
-git commit -m "Ajustando arquivos para deploy no Fly.io"
-git push --set-upstream origin main 
-
-
-
-
-
-fly deploy --local-only --ha=false
